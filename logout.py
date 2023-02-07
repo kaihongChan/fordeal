@@ -1,19 +1,55 @@
+import logging
+import os
+from http import cookiejar
+
+import pandas as pd
+import requests
+from requests.utils import dict_from_cookiejar
+from sqlalchemy import create_engine, text
+
+from conf import db_cfg
+
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="my_info.txt"
+)
+logger = logging.getLogger()
+
 if __name__ == '__main__':
-    data = {
-        'user': {
-            'fordealShopNameEn': 'WANN', 'qq': '', 'showLanguageSwitch': False,
-            'shopLogo': 'https://s3.forcloudcdn.com/merchant/dmc/a278c0c4-f819-4d52-8adc-92b70806899d-1024x1024.jpg',
-            'telCallingCode': '86', 'encryptAccountId': '01o7k65c_21jferfo', 'shopName': '长春市婉婷绪商贸行',
-            'telephone': '13860877329',
-            'privilege': {
-                'grayAccount4IM': False, 'supportCrawler': False, 'grayShop4IM': True,
-                'goodsSimple': False
-            },
-            'userName': '13860877329', 'shopPricingModel': 1,
-            'categoryName': '文具', 'createAt': '2022-11-10 10:40:55', 'accountId': 2033445, 'shopTag': '',
-            'fordealShopName': 'WANN',
-            'shopBanner': 'http://s3.forcloudcdn.com/dmc/b07d3f9a-cb50-43fd-80ed-c9cddc5a9ca2-800x277.jpeg',
-            'mtoken': '0b5162736e181b0efc6e63f7cb0df13dad18ee024b649c62d9924cefc67a170e0fe2f5598649b89eff07edaa12a34fa1f92170e94253e66dd606aad6b140adac0907a0a036700d1b45303065d949c4da',
-            'shopId': 1338732, 'region': 'CN', 'category': 257
-        }
+
+    url = "https://cn-ali-gw.fordeal.com/merchant/dwp.galio.logout/1"
+
+    header = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36 Edg/109.0.1518.78',
+        'referer': 'https://seller.fordeal.com/zh-CN/summary/index',
+        'accept': 'application/json, text/plain, */*',
     }
+
+    conn = (
+        f"mysql+pymysql://{db_cfg['user']}:{db_cfg['passwd']}"
+        f"@{db_cfg['host']}:{db_cfg['port']}/{db_cfg['db']}?charset={db_cfg['charset']}"
+    )
+    db_engine = create_engine(conn)
+
+    query_sql = (
+        "select * from accounts where `status`=1"
+    )
+    accounts = pd.read_sql(text(query_sql), con=db_engine.connect())
+
+    for _, account in accounts.iterrows():
+        try:
+            cookie_file_name = f"./cookie_files/cookie_{account['username']}.txt"
+            session = requests.session()
+            cookie = cookiejar.LWPCookieJar()
+            cookie.load(cookie_file_name, ignore_discard=True, ignore_expires=True)
+            cookie = dict_from_cookiejar(cookie)
+            session.cookies = requests.utils.cookiejar_from_dict(cookie)
+            session.headers = header
+            resp = session.get(url, data={"appname": "fordeal"})
+            logger.info(f"【{account['username']}】响应数据：{resp.text}")
+            resp_json = resp.json()
+            if resp.status_code == 200 and resp_json['code'] == 1001:
+                os.remove(cookie_file_name)
+        except Exception as e:
+            logger.error(f"【{account['username']}】注销登录失败")
+            logger.error(e)

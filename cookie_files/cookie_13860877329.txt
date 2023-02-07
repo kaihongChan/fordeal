@@ -1,6 +1,0 @@
-#LWP-Cookies-2.0
-Set-Cookie3: merchant_cur=CNY; path="/"; domain=".fordeal.com"; path_spec; domain_dot; expires="2023-02-22 07:34:19Z"; version=0
-Set-Cookie3: merchant_maid=50aab5c1ee90a75a39d5871f4caa6959; path="/"; domain=".fordeal.com"; path_spec; domain_dot; expires="2023-02-22 07:34:19Z"; version=0
-Set-Cookie3: merchant_mtoken=0b5162736e181b0efc6e63f7cb0df13dad18ee024b649c62d9924cefc67a170e0fe2f5598649b89eff07edaa12a34fa1f92170e94253e66dd606aad6b140adac0907a0a036700d1b45303065d949c4da; path="/"; domain=".fordeal.com"; path_spec; domain_dot; expires="2023-02-22 07:34:19Z"; version=0
-Set-Cookie3: merchant_region=CN; path="/"; domain=".fordeal.com"; path_spec; domain_dot; expires="2023-02-22 07:34:19Z"; version=0
-Set-Cookie3: mtoken=0b5162736e181b0efc6e63f7cb0df13dad18ee024b649c62d9924cefc67a170e0fe2f5598649b89eff07edaa12a34fa1f92170e94253e66dd606aad6b140adac0907a0a036700d1b45303065d949c4da; path="/"; domain=".fordeal.com"; path_spec; domain_dot; expires="2023-02-22 07:34:19Z"; version=0

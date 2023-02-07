@@ -35,6 +35,8 @@ class MyInfo:
     def _parse_and_save(self, resp, account_id):
         """ 数据解析及保存 """
         data = resp['data']['user']
+        print(data)
+        return
         del data['privilege'], data['mtoken']
         exist_sql = (
             f"select shopId from my_info where shopId={data['shopId']}"
