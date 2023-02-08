@@ -11,9 +11,9 @@ from conf import db_cfg
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="my_info.txt"
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="./logs/logout.txt"
 )
-logger = logging.getLogger()
+logger = logging.getLogger('logout')
 
 if __name__ == '__main__':
 

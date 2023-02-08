@@ -12,7 +12,7 @@ from conf import db_cfg, redis_cfg
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="my_info.txt"
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="logs/my_info.txt"
 )
 logger = logging.getLogger('myInfo')
 
@@ -35,9 +35,7 @@ class MyInfo:
     def _parse_and_save(self, resp, account_id):
         """ 数据解析及保存 """
         data = resp['data']['user']
-        print(data)
-        return
-        del data['privilege'], data['mtoken']
+        del data['privilege'], data['mtoken'], data['showLanguageSwitch']
         exist_sql = (
             f"select shopId from my_info where shopId={data['shopId']}"
         )

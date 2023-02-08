@@ -6,7 +6,11 @@ import pandas as pd
 from conf import db_cfg
 from sqlalchemy import create_engine, text
 
-logger = logging.getLogger()
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s', filename="./logs/login.txt"
+)
+logger = logging.getLogger('login')
 
 if __name__ == '__main__':
 
@@ -36,7 +40,7 @@ if __name__ == '__main__':
                 "data": account_json
             }
             session = requests.session()
-            session.cookies = cookiejar.LWPCookieJar(filename=f"cookies_{account['username']}.txt")
+            session.cookies = cookiejar.LWPCookieJar(filename=f"./cookie_files/cookie_{account['username']}.txt")
             resp = session.post(url=login_url, data=login_data, headers=headers)
             logger.info(f"登录返回：{resp.text}")
 
